@@ -25,7 +25,14 @@ register_error_handlers(app)
 #-----------------------------------------------------------
 @app.get("/")
 def index():
-    return render_template("pages/home.jinja")
+   
+       sql = """
+       INSERT INTO things (name, price) VALUES (?, ?)
+       """
+        values = (name, priority, timestamp)
+        client.execute(sql, values)
+   
+        return render_template("pages/home.jinja")
 
 
 #-----------------------------------------------------------
