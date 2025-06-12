@@ -25,60 +25,17 @@ register_error_handlers(app)
 #-----------------------------------------------------------
 @app.get("/")
 def index():
-   
-       sql = """
-       INSERT INTO things (name, price) VALUES (?, ?)
-       """
-        values = (name, priority, timestamp)
-        client.execute(sql, values)
-   
-        return render_template("pages/home.jinja")
-
-
-#-----------------------------------------------------------
-# About page route
-#-----------------------------------------------------------
-@app.get("/about/")
-def about():
-    return render_template("pages/about.jinja")
-
-
-#-----------------------------------------------------------
-# Things page route - Show all the things, and new thing form
-#-----------------------------------------------------------
-@app.get("/things/")
-def show_all_things():
+    return render_template("pages/home.jinja")
+@app.get("/tasks/")
+def show_all_tasks():
     with connect_db() as client:
-        # Get all the things from the DB
-        sql = "SELECT id, name FROM things ORDER BY name ASC"
+        # Get all the tasks from the DB
+        sql = "SELECT id, name FROM tasks ORDER BY name ASC"
         result = client.execute(sql)
-        things = result.rows
+        tasks = result.rows
 
         # And show them on the page
-        return render_template("pages/things.jinja", things=things)
-
-
-#-----------------------------------------------------------
-# Thing page route - Show details of a single thing
-#-----------------------------------------------------------
-@app.get("/thing/<int:id>")
-def show_one_thing(id):
-    with connect_db() as client:
-        # Get the thing details from the DB
-        sql = "SELECT id, name, price FROM things WHERE id=?"
-        values = [id]
-        result = client.execute(sql, values)
-
-        # Did we get a result?
-        if result.rows:
-            # yes, so show it on the page
-            thing = result.rows[0]
-            return render_template("pages/thing.jinja", thing=thing)
-
-        else:
-            # No, so show error
-            return not_found_error()
-
+        return render_template("pages/tasks.jinja", tasks=tasks)
 
 #-----------------------------------------------------------
 # Route for adding a thing, using data posted from a form
