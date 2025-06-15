@@ -44,16 +44,19 @@ def show_all_tasks():
 def add_a_thing():
     # Get the data from the form
     name  = request.form.get("name")
-    price = request.form.get("price")
+    priority = request.form.get("priority")
 
-    # Sanitise the inputs
+    values = priority.replace("name", "priority") 
+    # sanitize the inputs
     name = html.escape(name)
-    price = html.escape(price)
+    priority = html.escape(priority)
 
     with connect_db() as client:
         # Add the thing to the DB
-        sql = "INSERT INTO things (name, price) VALUES (?, ?)"
-        values = [name, price]
+        sql = "INSERT INTO things (name, priority) VALUES (?, ?)"
+
+
+        values = [name, priority]
         client.execute(sql, values)
 
         # Go back to the home page
@@ -68,12 +71,12 @@ def add_a_thing():
 def delete_a_thing(id):
     with connect_db() as client:
         # Delete the thing from the DB
-        sql = "DELETE FROM things WHERE id=?"
+        sql = "DELETE FROM tasks WHERE id=?"
         values = [id]
         client.execute(sql, values)
 
         # Go back to the home page
-        flash("Thing deleted", "warning")
-        return redirect("/things")
+        flash("task deleted", "warning")
+        return redirect("/tasks")
 
 
