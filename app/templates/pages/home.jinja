@@ -25,12 +25,20 @@
         <ul>
             {% for task in tasks %}
 
-                <li>
-                    <a href="/tasks/{{ tasks.id }}">
-                        {{ task.name }}
-                    </a>
-                </li>
+                <li class="task">
 
+                    {{ task.priority }} 
+                    
+                    {{ task.name }}
+                
+                    {% if task.complete %} 
+                        🗹 
+                    {% else %} 
+                        ☐ 
+                    {% endif %}
+                 
+                </li>
+                
             {% else %}
 
                 <p>None!</p>
@@ -48,23 +56,40 @@
         <form action="/add" method="POST">
 
             <input
-                type="id"
+                type="text"
                 name="name"
-                priority="priority"
-                timestamp="timestamp"
+                placeholder="name of task"
                 required
             >
 
             <input
                 type="number"
-                name="name"
+                name="priority"
                 min="0"
-                priority="priority number"
+                max="5"
+                placeholder="priority of task"
                 required
             >
 
             <button>Add the Tasks</button>
 
+
+        </form>
+
+        <form action="delete" method="POST">
+                  
+                
+            <input
+                type="number"
+                name="delete"
+                min="0"
+                max="5"
+                placeholder="delete which task?"
+                required
+            >
+            <button>Delete</button>
+        
+        
         </form>
 
     </article>

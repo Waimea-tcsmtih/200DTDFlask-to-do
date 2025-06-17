@@ -25,18 +25,15 @@ register_error_handlers(app)
 #-----------------------------------------------------------
 @app.get("/")
 def index():
-    return render_template("pages/home.jinja")
-@app.get("/tasks/")
-def show_all_tasks():
+
     with connect_db() as client:
         # Get all the tasks from the DB
-        sql = "SELECT id, name FROM tasks ORDER BY name ASC"
+        sql = "SELECT id, name, priority, complete FROM tasks ORDER BY priority ASC"
         result = client.execute(sql)
         tasks = result.rows
 
         # And show them on the page
-        return render_template("pages/tasks.jinja", tasks=tasks)
-
+    return render_template("pages/home.jinja", tasks=tasks)
 #-----------------------------------------------------------
 # Route for adding a thing, using data posted from a form
 #-----------------------------------------------------------
@@ -46,22 +43,20 @@ def add_a_thing():
     name  = request.form.get("name")
     priority = request.form.get("priority")
 
-    values = priority.replace("name", "priority") 
     # sanitize the inputs
     name = html.escape(name)
-    priority = html.escape(priority)
 
     with connect_db() as client:
-        # Add the thing to the DB
-        sql = "INSERT INTO things (name, priority) VALUES (?, ?)"
+        # Add the task to the DB
+        sql = "INSERT INTO tasks (name, priority) VALUES (?, ?)"
 
 
         values = [name, priority]
         client.execute(sql, values)
 
         # Go back to the home page
-        flash(f"Thing '{name}' added", "success")
-        return redirect("/things")
+        flash(f"task '{name}' added", "success")
+        return redirect("/")
 
 
 #-----------------------------------------------------------
@@ -71,12 +66,12 @@ def add_a_thing():
 def delete_a_thing(id):
     with connect_db() as client:
         # Delete the thing from the DB
-        sql = "DELETE FROM tasks WHERE id=?"
+        sql = "DELETE FROM home WHERE id=?"
         values = [id]
         client.execute(sql, values)
 
         # Go back to the home page
         flash("task deleted", "warning")
-        return redirect("/tasks")
+        return redirect("/")
 
 
