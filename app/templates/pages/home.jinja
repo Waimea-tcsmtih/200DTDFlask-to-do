@@ -31,19 +31,29 @@
                     
                     {{ task.name }}
                 
-                    {% if task.complete %} 
-                        🗹 
+                    
+                    {% if task.completed %} 
+                        <a href="/incomplete/{{ task.id }}">🗹</a>
                     {% else %} 
-                        ☐ 
+                        <a href ="/complete/{{ task.id }}">☐</a>
                     {% endif %}
+                        <a href ="/delete/{{ task.id }}">Delete</a>
+            
+                   
                  
                 </li>
-                
+
+                 
             {% else %}
 
                 <p>None!</p>
 
             {% endfor %}
+        
+         
+        
+        
+        
         </ul>
 
     </article>
@@ -76,21 +86,8 @@
 
         </form>
 
-        <form action="delete" method="POST">
-                  
-                
-            <input
-                type="number"
-                name="delete"
-                min="0"
-                max="5"
-                placeholder="delete which task?"
-                required
-            >
-            <button>Delete</button>
         
-        
-        </form>
+       
 
     </article>
 

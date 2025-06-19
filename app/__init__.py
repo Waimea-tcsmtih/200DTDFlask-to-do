@@ -60,18 +60,40 @@ def add_a_thing():
 
 
 #-----------------------------------------------------------
-# Route for deleting a thing, Id given in the route
+# Route for deleting a task, Id given in the route
 #-----------------------------------------------------------
 @app.get("/delete/<int:id>")
-def delete_a_thing(id):
+def delete_task(id):
     with connect_db() as client:
-        # Delete the thing from the DB
-        sql = "DELETE FROM home WHERE id=?"
+        # Delete the task from the DB
+        sql = "DELETE FROM tasks WHERE id=?"
         values = [id]
         client.execute(sql, values)
 
         # Go back to the home page
-        flash("task deleted", "warning")
+        return redirect("/")
+    
+#-----------------------------------------------------------
+# Route for deleting a task, Id given in the route
+#-----------------------------------------------------------
+@app.get("/complete/<int:id>")
+def complete_task(id):
+    with connect_db() as client:
+        sql = "UPDATE tasks set complete=? WHERE id=?"
+        values = [1, id]
+        client.execute(sql, values)
+        
+
+        #Go back to home
         return redirect("/")
 
 
+@app.get("/incomplete/<int:id>")
+def incomplete_task(id):
+    with connect_db() as client:
+        sql = "UPDATE tasks set complete=? WHERE id=?"
+        values = [0, id]
+        client.execute(sql, values)
+
+        #Go back to home
+        return redirect("/")
